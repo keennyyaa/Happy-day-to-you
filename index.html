@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Happy Day & Night</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 50px;
+      margin: 0;
+      background: linear-gradient(to bottom, #87ceeb, #fdfdfd);
+      transition: background 1s;
+    }
+    h1 {
+      font-size: 2.5em;
+      color: #333;
+    }
+    p {
+      font-size: 1.2em;
+      color: #555;
+    }
+    .night {
+      background: linear-gradient(to bottom, #0f2027, #203a43, #2c5364);
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <h1 id="greeting">Hello — have a wonderful day!</h1>
+  <p id="message">Wishing you sunshine, smiles, and peaceful nights 🌞🌙</p>
+
+  <script>
+    const hour = new Date().getHours();
+    if (hour >= 18 || hour < 6) {
+      document.body.classList.add('night');
+      document.getElementById('greeting').innerText = "Good Evening — Sweet Dreams!";
+      document.getElementById('message').innerText = "May your night be peaceful and full of rest 🌙✨";
+    }
+  </script>
+</body>
+</html>
