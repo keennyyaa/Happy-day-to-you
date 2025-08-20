@@ -1,0 +1,1477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartCare — Queue & Clinic Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            flex-wrap: wrap;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .brand span {
+            color: #4a6cf7;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        
+        .btn {
+            background: #4a6cf7;
+            color: white;
+        }
+        
+        .btn:hover {
+            background: #3a5ae0;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .btn.alt {
+            background: transparent;
+            color: #4a6cf7;
+            border: 1px solid #4a6cf7;
+        }
+        
+        .btn.alt:hover {
+            background: #f0f3ff;
+        }
+        
+        .ghost {
+            background: transparent;
+            color: #666;
+        }
+        
+        .ghost:hover {
+            background: #f5f5f5;
+        }
+        
+        .big {
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            max-width: 800px;
+            margin: 2rem auto;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .panel {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+            margin-bottom: 1rem;
+            animation: slideUp 0.3s ease;
+        }
+        
+        .center {
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+        }
+        
+        h2 {
+            font-size: 1.6rem;
+            margin-bottom: 1rem;
+        }
+        
+        h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.8rem;
+        }
+        
+        .lead {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+        
+        .neon {
+            background: linear-gradient(90deg, #4a6cf7, #8a64eb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+        }
+        
+        .small {
+            font-size: 0.9rem;
+            color: #777;
+        }
+        
+        .muted {
+            color: #999;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+        }
+        
+        .row {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin: 1.5rem 0;
+            flex-wrap: wrap;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+        
+        @media (min-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .topbar {
+                padding: 1rem 2rem;
+            }
+            
+            h1 {
+                font-size: 2.5rem;
+            }
+        }
+        
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .feature {
+            background: #f7f9ff;
+            padding: 0.8rem 1.2rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            border: 1px solid #e6eaff;
+            transition: all 0.2s;
+        }
+        
+        .feature:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(74, 108, 247, 0.1);
+        }
+        
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 1rem;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .modal-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            width: 100%;
+            max-width: 400px;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: scaleIn 0.3s ease;
+        }
+        
+        .modal input, .modal select, .modal textarea {
+            width: 100%;
+            padding: 0.8rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-family: inherit;
+            transition: border 0.2s;
+        }
+        
+        .modal input:focus, .modal select:focus, .modal textarea:focus {
+            border-color: #4a6cf7;
+            outline: none;
+        }
+        
+        .ticket {
+            background: linear-gradient(135deg, #4a6cf7 0%, #8a64eb 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 1rem 0;
+            animation: pulse 2s infinite;
+        }
+        
+        .queue-list {
+            list-style: none;
+        }
+        
+        .queue-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+            transition: all 0.2s;
+        }
+        
+        .queue-item:hover {
+            background: #f9f9f9;
+        }
+        
+        .queue-item:last-child {
+            border-bottom: none;
+        }
+        
+        .queue-item.important {
+            background: #fff9e6;
+            border-left: 4px solid #ffc53d;
+        }
+        
+        .queue-item.urgent {
+            background: #ffe6e6;
+            border-left: 4px solid #ff4d4d;
+            animation: pulse 1.5s infinite;
+        }
+        
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            z-index: 1001;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            animation: slideUp 0.3s ease;
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        .screen {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+        
+        .health-tip {
+            background: #e8f5e9;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            border-left: 4px solid #4caf50;
+        }
+        
+        .quiz-container {
+            background: #fff3e0;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            border-left: 4px solid #ff9800;
+        }
+        
+        .quiz-option {
+            display: block;
+            width: 100%;
+            text-align: left;
+            margin: 0.5rem 0;
+            padding: 0.8rem;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .quiz-option:hover {
+            background: #f5f5f5;
+        }
+        
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #4a6cf7;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: #777;
+        }
+        
+        .priority-badge {
+            display: inline-block;
+            padding: 0.2rem 0.5rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            margin-left: 0.5rem;
+        }
+        
+        .priority-high {
+            background: #ffe6e6;
+            color: #ff4d4d;
+        }
+        
+        .priority-medium {
+            background: #fff9e6;
+            color: #ffa500;
+        }
+        
+        .priority-low {
+            background: #e6f7ff;
+            color: #1890ff;
+        }
+        
+        .notification-dot {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 12px;
+            height: 12px;
+            background: #ff4d4d;
+            border-radius: 50%;
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from { 
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes scaleIn {
+            from { 
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to { 
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(74, 108, 247, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(74, 108, 247, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(74, 108, 247, 0); }
+        }
+        
+        /* Loading spinner */
+        .spinner {
+            width: 40px;
+            height: 40px;
+            margin: 1rem auto;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #4a6cf7;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* New UI elements */
+        .tab-container {
+            display: flex;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 1rem;
+        }
+        
+        .tab {
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+        
+        .tab.active {
+            border-bottom: 2px solid #4a6cf7;
+            color: #4a6cf7;
+            font-weight: 600;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .search-box {
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 0.2rem 0.5rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            margin-left: 0.5rem;
+            background: #e6f7ff;
+            color: #1890ff;
+        }
+        
+        .badge.success {
+            background: #e8f5e9;
+            color: #4caf50;
+        }
+        
+        .badge.warning {
+            background: #fff9e6;
+            color: #ffa500;
+        }
+        
+        .badge.error {
+            background: #ffe6e6;
+            color: #ff4d4d;
+        }
+    </style>
+</head>
+<body>
+    <header class="topbar">
+        <div class="brand">🏥 <span>SmartCare</span> <span class="badge">v2.0</span></div>
+        <div class="actions">
+            <button id="btnSignup" class="btn">Sign up</button>
+            <button id="btnLogin" class="btn alt">Log in</button>
+        </div>
+    </header>
+
+    <main id="root">
+        <!-- Landing -->
+        <section id="home" class="card center">
+            <h1>Welcome to <span class="neon">SmartCare</span></h1>
+            <p class="lead">Faster queues, happier patients, smarter doctors — all in one playful app.</p>
+
+            <div class="row">
+                <button class="big" id="startPatient">I'm a patient</button>
+                <button class="big" id="startDoctor">I'm a doctor</button>
+                <button class="big" id="startAdmin">I'm admin</button>
+            </div>
+
+            <div class="features">
+                <div class="feature">🔁 Live queue</div>
+                <div class="feature">📲 Patient tokens</div>
+                <div class="feature">⚡ Fast doctor dashboard</div>
+                <div class="feature">🎮 Waiting-room games & tips</div>
+                <div class="feature">📊 Analytics & reports</div>
+                <div class="feature">🔔 Notifications</div>
+            </div>
+        </section>
+
+        <section id="app" class="hidden"></section>
+    </main>
+
+    <!-- Signup Modal -->
+    <div id="modalSignup" class="modal hidden">
+        <div class="modal-card">
+            <h2>Create account</h2>
+            <form id="formSignup">
+                <input required name="name" placeholder="Full name">
+                <input required name="username" type="email" placeholder="Email">
+                <input required type="password" name="password" placeholder="Password">
+                <select name="role" required>
+                    <option value="" disabled selected>Select your role</option>
+                    <option value="patient">Patient</option>
+                    <option value="doctor">Doctor</option>
+                    <option value="admin">Admin</option>
+                </select>
+                <div class="row">
+                    <button type="submit" class="btn">Sign up</button>
+                    <button type="button" class="btn ghost" data-close>Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="modalLogin" class="modal hidden">
+        <div class="modal-card">
+            <h2>Log in</h2>
+            <form id="formLogin">
+                <input required name="username" type="email" placeholder="Email">
+                <input required type="password" name="password" placeholder="Password">
+                <div class="row">
+                    <button type="submit" class="btn">Log in</button>
+                    <button type="button" class="btn ghost" data-close>Cancel</button>
+                </div>
+            </form>
+            <p class="muted">Don't have an account? <a href="#" id="switchToSignup">Sign up here</a></p>
+        </div>
+    </div>
+
+    <div id="toast" class="toast hidden"></div>
+
+    <script>
+        // Queue & Storage
+        const STORAGE = { 
+            queue: 'sc_queue_v2', 
+            settings: 'sc_settings_v2',
+            users: 'sc_users_v2',
+            appointments: 'sc_appointments_v2'
+        };
+        
+        // Initialize users if not exists
+        if (!localStorage.getItem(STORAGE.users)) {
+            localStorage.setItem(STORAGE.users, JSON.stringify([]));
+        }
+        
+        // Initialize appointments if not exists
+        if (!localStorage.getItem(STORAGE.appointments)) {
+            localStorage.setItem(STORAGE.appointments, JSON.stringify([]));
+        }
+        
+        function getQueue(){ 
+            return JSON.parse(localStorage.getItem(STORAGE.queue) || '[]'); 
+        }
+        
+        function saveQueue(q){ 
+            localStorage.setItem(STORAGE.queue, JSON.stringify(q)); 
+        }
+        
+        function getUsers() {
+            return JSON.parse(localStorage.getItem(STORAGE.users) || '[]');
+        }
+        
+        function saveUser(user) {
+            const users = getUsers();
+            users.push(user);
+            localStorage.setItem(STORAGE.users, JSON.stringify(users));
+        }
+        
+        function findUser(email, password) {
+            const users = getUsers();
+            return users.find(u => u.username === email && u.password === password);
+        }
+        
+        function getAppointments() {
+            return JSON.parse(localStorage.getItem(STORAGE.appointments) || '[]');
+        }
+        
+        function saveAppointment(appointment) {
+            const appointments = getAppointments();
+            appointments.push(appointment);
+            localStorage.setItem(STORAGE.appointments, JSON.stringify(appointments));
+        }
+        
+        function addToken(name, contact, priority = 'normal'){
+            const q = getQueue();
+            const num = q.length ? Math.max(...q.map(x => x.number)) + 1 : 1;
+            const t = {
+                id: 't' + Date.now(), 
+                number: num, 
+                name, 
+                contact, 
+                created: Date.now(), 
+                status: 'waiting', 
+                notes: '',
+                priority: priority,
+                estimatedWait: calculateWaitTime(q)
+            };
+            q.push(t); 
+            saveQueue(q); 
+            return t;
+        }
+        
+        function calculateWaitTime(queue) {
+            const waitingPatients = queue.filter(p => p.status === 'waiting').length;
+            // Assume 15 minutes per patient on average
+            return waitingPatients * 15;
+        }
+        
+        function advanceQueue(){ 
+            const q = getQueue(); 
+            const idx = q.findIndex(x => x.status === 'waiting'); 
+            if(idx >= 0){ 
+                q[idx].status = 'called'; 
+                q[idx].calledAt = Date.now();
+                saveQueue(q); 
+                return q[idx]; 
+            } 
+            return null; 
+        }
+        
+        function markSeen(ticketId, doctorName){ 
+            const q = getQueue(); 
+            const t = q.find(x => x.id === ticketId); 
+            if(t){ 
+                t.status = 'seen'; 
+                t.handledBy = doctorName || 'unknown'; 
+                t.seenAt = Date.now(); 
+                saveQueue(q); 
+            } 
+        }
+        
+        function removeTicket(ticketId){ 
+            const q = getQueue(); 
+            const idx = q.findIndex(x => x.id === ticketId); 
+            if(idx >= 0){ 
+                q.splice(idx, 1); 
+                saveQueue(q);
+            } 
+        }
+
+        // UI helpers
+        function $(sel){ return document.querySelector(sel); }
+        function $all(sel){ return Array.from(document.querySelectorAll(sel)); }
+        function show(el){ el.classList.remove('hidden'); }
+        function hide(el){ el.classList.add('hidden'); }
+        
+        function showToast(msg, type = ''){ 
+            const t = $('#toast'); 
+            t.textContent = msg;
+            t.className = 'toast';
+            if (type) t.classList.add(type);
+            t.classList.remove('hidden'); 
+            setTimeout(() => t.classList.add('hidden'), 2500); 
+        }
+        
+        function openModal(sel){ show($(sel)); }
+        function closeModal(sel){ hide($(sel)); }
+        
+        function closeAllModals() {
+            closeModal('#modalSignup');
+            closeModal('#modalLogin');
+        }
+
+        function formatTime(timestamp) {
+            if (!timestamp) return 'N/A';
+            return new Date(timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        }
+
+        function formatDuration(minutes) {
+            if (minutes < 60) return `${minutes} min`;
+            const hours = Math.floor(minutes / 60);
+            const mins = minutes % 60;
+            return `${hours}h ${mins}m`;
+        }
+
+        function handleSignup(e){
+            e.preventDefault();
+            const email = $('#modalSignup input[name="username"]').value;
+            const password = $('#modalSignup input[name="password"]').value;
+            const role = $('#modalSignup select[name="role"]').value;
+            const name = $('#modalSignup input[name="name"]').value;
+            
+            // Simple validation
+            if (!email || !password || !role || !name) {
+                showToast('Please fill all fields');
+                return;
+            }
+            
+            // Check if user already exists
+            const users = getUsers();
+            if (users.find(u => u.username === email)) {
+                showToast('User already exists with this email');
+                return;
+            }
+            
+            // Create user (in a real app, this would be a server API call)
+            const user = {
+                id: 'user' + Date.now(),
+                username: email,
+                password: password, // In a real app, this would be hashed
+                role: role,
+                name: name,
+                createdAt: Date.now()
+            };
+            
+            saveUser(user);
+            
+            // Set session
+            sessionStorage.setItem('sc_session_v2', JSON.stringify({
+                id: user.id,
+                name: user.name,
+                username: user.username,
+                role: user.role
+            }));
+            
+            showToast('Signup successful ✅', 'success'); 
+            closeAllModals(); 
+            renderApp();
+        }
+
+        function handleLogin(e){
+            e.preventDefault();
+            const email = $('#modalLogin input[name="username"]').value;
+            const password = $('#modalLogin input[name="password"]').value;
+            
+            // Simple validation
+            if (!email || !password) {
+                showToast('Please enter email and password');
+                return;
+            }
+            
+            // Find user (in a real app, this would be a server API call)
+            const user = findUser(email, password);
+            
+            if (!user) {
+                showToast('Invalid credentials');
+                return;
+            }
+            
+            // Set session
+            sessionStorage.setItem('sc_session_v2', JSON.stringify({
+                id: user.id,
+                name: user.name,
+                username: user.username,
+                role: user.role
+            }));
+            
+            renderApp(); 
+            showToast('Welcome back 🎉', 'success');
+            closeAllModals();
+        }
+
+        function handleLogout(){ 
+            sessionStorage.removeItem('sc_session_v2'); 
+            renderApp(); 
+            showToast('Logged out'); 
+        }
+
+        // --- Render App ---
+        function renderApp(){
+            const session = JSON.parse(sessionStorage.getItem('sc_session_v2') || 'null');
+            const app = $('#app'); 
+            app.innerHTML = ''; 
+            
+            if(!session){ 
+                hide(app); 
+                show($('#home')); 
+                return; 
+            } 
+            
+            hide($('#home')); 
+            show(app);
+            app.classList.remove('hidden');
+
+            const screen = document.createElement('div'); 
+            screen.className = 'screen';
+            
+            // Add notification bell for doctors and admins
+            if (session.role === 'doctor' || session.role === 'admin') {
+                const notificationCount = getQueue().filter(p => p.status === 'waiting').length;
+                screen.innerHTML = `
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem">
+                        <div><strong>Hi, ${session.name}</strong><div class='small'>Role: ${session.role}</div></div>
+                        <div style="position:relative">
+                            <button id='notificationsBtn' class='ghost'>🔔</button>
+                            ${notificationCount > 0 ? `<span class="notification-dot"></span>` : ''}
+                            <button id='logoutBtn' class='ghost'>Logout</button>
+                        </div>
+                    </div>
+                `;
+            } else {
+                screen.innerHTML = `
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem">
+                        <div><strong>Hi, ${session.name}</strong><div class='small'>Role: ${session.role}</div></div>
+                        <div><button id='logoutBtn' class='ghost'>Logout</button></div>
+                    </div>
+                `;
+            }
+
+            const grid = document.createElement('div'); 
+            grid.className = 'grid';
+            const left = document.createElement('div'); 
+            left.className = 'panel';
+            const right = document.createElement('div'); 
+            right.className = 'panel';
+
+            // Role views
+            if(session.role === 'patient'){
+                // Check if patient already has a token
+                const patientQueue = getQueue().find(p => p.contact === session.username && (p.status === 'waiting' || p.status === 'called'));
+                
+                left.innerHTML = `
+                <h2>Your Token</h2>
+                ${patientQueue ? `
+                    <div class='ticket'>
+                        #${patientQueue.number}
+                        <div class='small'>Status: ${patientQueue.status === 'called' ? 'Being seen' : 'Waiting'}</div>
+                        ${patientQueue.status === 'waiting' ? `
+                            <div class='small'>Estimated wait: ${formatDuration(patientQueue.estimatedWait)}</div>
+                        ` : ''}
+                    </div>
+                    <div style='margin-top:12px'>
+                        <button id='btnCancelToken' class='btn alt'>Cancel Token</button>
+                    </div>
+                ` : `
+                    <div class='ticket' id='patientTicket'>No token yet. Click below to get one.</div>
+                    <div style='margin-top:12px'><button id='btnGetToken' class='btn big'>Get Token 🎟️</button></div>
+                    <div style="margin-top: 1rem">
+                        <select id="prioritySelect" style="width: 100%; padding: 0.5rem; margin-bottom: 0.5rem;">
+                            <option value="normal">Normal Priority</option>
+                            <option value="urgent">Urgent</option>
+                        </select>
+                    </div>
+                `}
+                <div style='margin-top:16px'><h3 class='small'>Waiting room</h3><div id='patientWait' class='small'>—</div></div>`;
+                
+                right.innerHTML = `
+                    <div class="tab-container">
+                        <div class="tab active" data-tab="tips">Health Tips</div>
+                        <div class="tab" data-tab="games">Mini Games</div>
+                        <div class="tab" data-tab="appointments">Appointments</div>
+                    </div>
+                    <div class="tab-content active" id="tipsContent">
+                        <h3>Stay Healthy</h3>
+                        <div id='miniGames'><button id='tipBtn' class='ghost'>Show a health tip</button></div>
+                        <div id='gameArea' style='margin-top:12px'></div>
+                    </div>
+                    <div class="tab-content" id="gamesContent">
+                        <h3>Fun Games</h3>
+                        <button id='quizBtn' class='ghost'>Health Quiz</button>
+                        <button id='memoryBtn' class='ghost'>Memory Game</button>
+                        <div id='gameArea2' style='margin-top:12px'></div>
+                    </div>
+                    <div class="tab-content" id="appointmentsContent">
+                        <h3>My Appointments</h3>
+                        <button id='bookAppointment' class='btn'>Book New Appointment</button>
+                        <div id='appointmentsList' style='margin-top:12px'></div>
+                    </div>
+                `;
+            }
+
+            if(session.role === 'doctor'){
+                left.innerHTML = `
+                    <h2>Today's Queue</h2>
+                    <div class="stats-container">
+                        <div class="stat-card">
+                            <div class="stat-number" id="waitingCount">0</div>
+                            <div class="stat-label">Waiting</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="calledCount">0</div>
+                            <div class="stat-label">In Progress</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="seenCount">0</div>
+                            <div class="stat-label">Seen Today</div>
+                        </div>
+                    </div>
+                    <div id='doctorQueue'></div>
+                `;
+                right.innerHTML = `
+                    <h3>Quick actions</h3>
+                    <button id='callNext' class='btn'>Call next</button> 
+                    <button id='markSeenAll' class='ghost'>Mark all seen</button>
+                    <div style="margin-top: 1rem">
+                        <input type="text" class="search-box" placeholder="Search patients..." id="searchPatients">
+                    </div>
+                `;
+            }
+
+            if(session.role === 'admin'){
+                left.innerHTML = `
+                    <h2>Admin Panel</h2>
+                    <div class="stats-container">
+                        <div class="stat-card">
+                            <div class="stat-number" id="totalQueue">0</div>
+                            <div class="stat-label">In Queue</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="avgWait">0m</div>
+                            <div class="stat-label">Avg. Wait</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="todayPatients">0</div>
+                            <div class="stat-label">Today</div>
+                        </div>
+                    </div>
+                    <div style='margin-top:18px'>
+                        <h3>Queue snapshot</h3>
+                        <div id='adminQueue'></div>
+                    </div>
+                `;
+                right.innerHTML = `
+                    <h3>Management</h3>
+                    <button id='exportData' class='btn'>Export Data</button>
+                    <button id='clearOld' class='ghost'>Clear Old Records</button>
+                    <div style="margin-top: 1rem">
+                        <h4>System Settings</h4>
+                        <div class="small">Avg. consultation time:</div>
+                        <input type="number" id="consultTime" value="15" min="5" max="60" style="width: 100%"> minutes
+                    </div>
+                `;
+            }
+
+            grid.appendChild(left); 
+            grid.appendChild(right); 
+            screen.appendChild(grid); 
+            app.appendChild(screen);
+
+            $('#logoutBtn').addEventListener('click', () => handleLogout());
+
+            // Tab functionality
+            $all('.tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const tabName = tab.dataset.tab;
+                    $all('.tab').forEach(t => t.classList.remove('active'));
+                    $all('.tab-content').forEach(c => c.classList.remove('active'));
+                    tab.classList.add('active');
+                    $(`#${tabName}Content`).classList.add('active');
+                });
+            });
+
+            // Patient events
+            if(session.role === 'patient'){
+                // Update waiting room info
+                updateWaitingRoom();
+                
+                $('#btnGetToken')?.addEventListener('click', () => {
+                    const priority = $('#prioritySelect').value;
+                    const t = addToken(session.name, session.username, priority); 
+                    renderApp(); 
+                    showToast(`Token #${t.number} created`, 'success');
+                });
+                
+                $('#btnCancelToken')?.addEventListener('click', () => {
+                    const patientQueue = getQueue().find(p => p.contact === session.username && (p.status === 'waiting' || p.status === 'called'));
+                    if (patientQueue && confirm('Are you sure you want to cancel your token?')) {
+                        removeTicket(patientQueue.id);
+                        renderApp();
+                        showToast('Token cancelled');
+                    }
+                });
+                
+                $('#tipBtn')?.addEventListener('click', () => { 
+                    const tips = [
+                        'Drink at least 8 glasses of water daily 💧',
+                        'Walk for 30 minutes every day 🏃',
+                        'Wash hands frequently with soap 🧼',
+                        'Rest your eyes every hour when using screens 👀',
+                        'Get 7-8 hours of sleep each night 😴',
+                        'Eat at least 5 servings of fruits and vegetables daily 🍎🥦',
+                        'Practice deep breathing for 5 minutes daily to reduce stress 🧘',
+                        'Limit processed foods and sugars for better health 🚫🍬'
+                    ]; 
+                    $('#gameArea').innerHTML = `<div class='health-tip'>${tips[Math.floor(Math.random() * tips.length)]}</div>`; 
+                });
+                
+                $('#quizBtn')?.addEventListener('click', () => { 
+                    const quizzes = [
+                        {
+                            q: 'How long should you wash your hands?', 
+                            a: ['5 seconds', '10 seconds', '20 seconds', '1 minute'], 
+                            c: 2
+                        },
+                        {
+                            q: 'How much water should you drink daily?', 
+                            a: ['2 glasses', '4 glasses', '8 glasses', '12 glasses'], 
+                            c: 2
+                        },
+                        {
+                            q: 'How often should you take breaks from screens?', 
+                            a: ['Every 30 minutes', 'Every hour', 'Every 2 hours', 'Every 4 hours'], 
+                            c: 1
+                        }
+                    ]; 
+                    
+                    const quiz = quizzes[Math.floor(Math.random() * quizzes.length)]; 
+                    $('#gameArea2').innerHTML = `
+                        <div class='quiz-container'>
+                            <strong>${quiz.q}</strong>
+                            <div style='margin-top: 12px;'>
+                                ${quiz.a.map((option, i) => `<button class='quiz-option' data-i='${i}'>${option}</button>`).join('')}
+                            </div>
+                        </div>
+                    `; 
+                    
+                    $all('.quiz-option').forEach(btn => {
+                        btn.addEventListener('click', e => {
+                            const selectedIdx = Number(e.target.dataset.i);
+                            if(selectedIdx === quiz.c) {
+                                showToast('Correct! ✅', 'success');
+                                e.target.style.background = '#e8f5e9';
+                            } else {
+                                showToast('Try again!');
+                                e.target.style.background = '#ffebee';
+                            }
+                        });
+                    });
+                });
+                
+                $('#memoryBtn')?.addEventListener('click', () => {
+                    $('#gameArea2').innerHTML = `
+                        <div style="text-align: center; padding: 1rem;">
+                            <h4>Memory Game</h4>
+                            <p>Match the health-related pairs!</p>
+                            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; margin-top: 1rem;">
+                                ${['🍎', '🥦', '💧', '🏃', '😴', '🧘', '🧼', '👀'].map(icon => `
+                                    <div style="height: 60px; background: #f0f3ff; display: flex; align-items: center; justify-content: center; border-radius: 8px; font-size: 1.5rem; cursor: pointer;">
+                                        ${icon}
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                $('#bookAppointment')?.addEventListener('click', () => {
+                    const modal = document.createElement('div');
+                    modal.className = 'modal';
+                    modal.innerHTML = `
+                        <div class="modal-card">
+                            <h3>Book Appointment</h3>
+                            <input type="date" id="appointmentDate" required>
+                            <input type="time" id="appointmentTime" required>
+                            <textarea placeholder="Reason for visit" id="appointmentReason"></textarea>
+                            <div class="row">
+                                <button class="btn" id="confirmAppointment">Confirm</button>
+                                <button class="btn ghost" data-close>Cancel</button>
+                            </div>
+                        </div>
+                    `;
+                    document.body.appendChild(modal);
+                    
+                    $('#confirmAppointment').addEventListener('click', () => {
+                        const date = $('#appointmentDate').value;
+                        const time = $('#appointmentTime').value;
+                        const reason = $('#appointmentReason').value;
+                        
+                        if (!date || !time) {
+                            showToast('Please select date and time');
+                            return;
+                        }
+                        
+                        const appointment = {
+                            id: 'a' + Date.now(),
+                            patientId: session.id,
+                            patientName: session.name,
+                            date: date,
+                            time: time,
+                            reason: reason,
+                            status: 'scheduled',
+                            createdAt: Date.now()
+                        };
+                        
+                        saveAppointment(appointment);
+                        showToast('Appointment booked successfully!', 'success');
+                        modal.remove();
+                        renderAppointmentsList();
+                    });
+                    
+                    $('[data-close]').addEventListener('click', () => {
+                        modal.remove();
+                    });
+                    
+                    modal.addEventListener('click', (e) => {
+                        if (e.target === modal) {
+                            modal.remove();
+                        }
+                    });
+                });
+                
+                // Render appointments list
+                renderAppointmentsList();
+            }
+
+            // Doctor events
+            if(session.role === 'doctor'){
+                updateDoctorStats();
+                renderDoctorQueue();
+                
+                $('#callNext').addEventListener('click', () => {
+                    const called = advanceQueue(); 
+                    if(called){ 
+                        showToast(`Called token #${called.number}`, 'success'); 
+                        updateDoctorStats();
+                        renderDoctorQueue(); 
+                    } else {
+                        showToast('No waiting patients');
+                    }
+                });
+                
+                $('#markSeenAll').addEventListener('click', () => {
+                    const q = getQueue();
+                    q.forEach(x => { 
+                        if(x.status !== 'seen') {
+                            x.status = 'seen'; 
+                            x.handledBy = session.name;
+                            x.seenAt = Date.now();
+                        }
+                    }); 
+                    saveQueue(q); 
+                    updateDoctorStats();
+                    renderDoctorQueue(); 
+                    showToast('All marked seen', 'success');
+                });
+                
+                $('#searchPatients').addEventListener('input', (e) => {
+                    const searchTerm = e.target.value.toLowerCase();
+                    const queueItems = $all('.queue-item');
+                    
+                    queueItems.forEach(item => {
+                        const patientName = item.querySelector('strong').textContent.toLowerCase();
+                        const patientNumber = item.querySelector('.small').textContent.toLowerCase();
+                        
+                        if (patientName.includes(searchTerm) || patientNumber.includes(searchTerm)) {
+                            item.style.display = 'flex';
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                });
+            }
+
+            // Admin events
+            if(session.role === 'admin'){
+                updateAdminStats();
+                renderAdminQueue();
+                
+                $('#exportData').addEventListener('click', () => {
+                    const queue = getQueue();
+                    const csvContent = "data:text/csv;charset=utf-8," 
+                        + "Number,Name,Contact,Status,Priority,Created,Seen At,Handled By\n"
+                        + queue.map(e => 
+                            `${e.number},${e.name},${e.contact},${e.status},${e.priority},${new Date(e.created).toLocaleString()},${e.seenAt ? new Date(e.seenAt).toLocaleString() : 'N/A'},${e.handledBy || 'N/A'}`
+                        ).join("\n");
+                    
+                    const encodedUri = encodeURI(csvContent);
+                    const link = document.createElement("a");
+                    link.setAttribute("href", encodedUri);
+                    link.setAttribute("download", `queue_data_${new Date().toISOString().split('T')[0]}.csv`);
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    
+                    showToast('Data exported successfully', 'success');
+                });
+                
+                $('#clearOld').addEventListener('click', () => {
+                    if (confirm('Are you sure you want to clear records older than 30 days?')) {
+                        const queue = getQueue();
+                        const thirtyDaysAgo = Date.now() - (30 * 24 * 60 * 60 * 1000);
+                        const filteredQueue = queue.filter(item => item.created > thirtyDaysAgo);
+                        saveQueue(filteredQueue);
+                        renderAdminQueue();
+                        showToast('Old records cleared', 'success');
+                    }
+                });
+            }
+        }
+
+        function updateWaitingRoom() {
+            const session = JSON.parse(sessionStorage.getItem('sc_session_v2') || 'null');
+            if (!session || session.role !== 'patient') return;
+            
+            const patientQueue = getQueue().find(p => p.contact === session.username && (p.status === 'waiting' || p.status === 'called'));
+            if (!patientQueue) return;
+            
+            const waitingPatients = getQueue().filter(p => p.status === 'waiting' && p.created < patientQueue.created);
+            $('#patientWait').textContent = `${waitingPatients.length} patients ahead of you`;
+            
+            // Auto-refresh every 30 seconds
+            setTimeout(updateWaitingRoom, 30000);
+        }
+
+        function updateDoctorStats() {
+            const queue = getQueue();
+            const waitingCount = queue.filter(p => p.status === 'waiting').length;
+            const calledCount = queue.filter(p => p.status === 'called').length;
+            const seenCount = queue.filter(p => p.status === 'seen').length;
+            
+            $('#waitingCount').textContent = waitingCount;
+            $('#calledCount').textContent = calledCount;
+            $('#seenCount').textContent = seenCount;
+        }
+
+        function updateAdminStats() {
+            const queue = getQueue();
+            const waitingCount = queue.filter(p => p.status === 'waiting').length;
+            const calledCount = queue.filter(p => p.status === 'called').length;
+            const todayStart = new Date().setHours(0,0,0,0);
+            const todayPatients = queue.filter(p => p.created >= todayStart).length;
+            
+            // Calculate average wait time
+            const seenPatients = queue.filter(p => p.status === 'seen' && p.calledAt && p.created);
+            const totalWaitTime = seenPatients.reduce((total, patient) => {
+                return total + (patient.calledAt - patient.created);
+            }, 0);
+            const avgWaitMins = seenPatients.length > 0 ? Math.round((totalWaitTime / seenPatients.length) / 60000) : 0;
+            
+            $('#totalQueue').textContent = waitingCount + calledCount;
+            $('#avgWait').textContent = `${avgWaitMins}m`;
+            $('#todayPatients').textContent = todayPatients;
+        }
+
+        function renderAppointmentsList() {
+            const session = JSON.parse(sessionStorage.getItem('sc_session_v2') || 'null');
+            if (!session || session.role !== 'patient') return;
+            
+            const appointments = getAppointments().filter(a => a.patientId === session.id);
+            const appointmentsList = $('#appointmentsList');
+            
+            if (appointments.length === 0) {
+                appointmentsList.innerHTML = '<p class="muted">No appointments scheduled</p>';
+                return;
+            }
+            
+            appointmentsList.innerHTML = `
+                <div style="max-height: 300px; overflow-y: auto;">
+                    ${appointments.map(app => `
+                        <div class="queue-item">
+                            <div>
+                                <strong>${app.date} at ${app.time}</strong>
+                                <div class="small">${app.reason || 'No reason provided'}</div>
+                                <span class="badge ${app.status === 'scheduled' ? 'success' : 'warning'}">${app.status}</span>
+                            </div>
+                            <div>
+                                <button class="ghost small cancel-appointment" data-id="${app.id}">Cancel</button>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            
+            $all('.cancel-appointment').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const appointmentId = e.target.dataset.id;
+                    if (confirm('Are you sure you want to cancel this appointment?')) {
+                        const appointments = getAppointments();
+                        const updatedAppointments = appointments.filter(a => a.id !== appointmentId);
+                        localStorage.setItem(STORAGE.appointments, JSON.stringify(updatedAppointments));
+                        renderAppointmentsList();
+                        showToast('Appointment cancelled');
+                    }
+                });
+            });
+        }
+
+        // Doctor queue
+        function renderDoctorQueue(){
+            const q = getQueue().slice().sort((a, b) => a.created - b.created);
+            const el = $('#doctorQueue'); 
+            if(!el) return;
+            
+            el.innerHTML = `<ul class='queue-list'>${q.map(x => `
+                <li class='queue-item ${x.status === 'called' ? 'important' : ''} ${x.priority === 'urgent' ? 'urgent' : ''}' data-id='${x.id}'>
+                    <div>
+                        <strong>#${x.number}</strong> 
+                        <span class='small'>${x.name}</span>
+                        <div class='small'>Status: ${x.status} ${x.priority === 'urgent' ? '<span class="priority-badge priority-high">Urgent</span>' : ''}</div>
+                        ${x.status === 'waiting' ? `<div class='small'>Wait: ~${formatDuration(x.estimatedWait)}</div>` : ''}
+                    </div>
+                    <div>
+                        <button class='btn small callBtn' data-id='${x.id}'>Details</button>
+                    </div>
+                </li>
+            `).join('')}</ul>`;
+            
+            $all('.callBtn').forEach(b => b.addEventListener('click', ev => openPatientDetail(ev.target.dataset.id)));
+        }
+
+        function openPatientDetail(id){
+            const t = getQueue().find(x => x.id === id); 
+            if(!t) return;
+            
+            const box = document.createElement('div'); 
+            box.className = 'modal';
+            box.innerHTML = `
+                <div class='modal-card'>
+                    <h3>Token #${t.number}</h3>
+                    <div class='small'>Name: ${t.name}</div>
+                    <div class='small'>Contact: ${t.contact}</div>
+                    <div class='small'>Status: ${t.status}</div>
+                    <div class='small'>Priority: ${t.priority} ${t.priority === 'urgent' ? '<span class="priority-badge priority-high">Urgent</span>' : ''}</div>
+                    <div class='small'>Waiting time: ${Math.floor((Date.now() - t.created) / 60000)} minutes</div>
+                    <textarea id='notes' placeholder='Clinical notes' style='width:100%;height:90px;margin-top:8px'>${t.notes || ''}</textarea>
+                    <div style='margin-top:8px'>
+                        <button id='saveNote' class='btn'>Save & Mark seen</button> 
+                        <button id='closeM' class='btn ghost'>Close</button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(box);
+            
+            $('#saveNote').addEventListener('click', () => { 
+                t.notes = $('#notes').value; 
+                markSeen(t.id, JSON.parse(sessionStorage.getItem('sc_session_v2')).name); 
+                renderDoctorQueue(); 
+                updateDoctorStats();
+                box.remove(); 
+                showToast('Marked seen', 'success'); 
+            });
+            
+            $('#closeM').addEventListener('click', () => { box.remove(); });
+            
+            box.addEventListener('click', (e) => {
+                if (e.target === box) {
+                    box.remove();
+                }
+            });
+        }
+
+        // Admin queue
+        function renderAdminQueue(){
+            const el = $('#adminQueue'); 
+            if(!el) return;
+            
+            const q = getQueue().slice().sort((a, b) => a.created - b.created);
+            el.innerHTML = `
+                <div class='small' style='margin-bottom: 12px;'>Total in queue: ${q.filter(p => p.status !== 'seen').length}</div>
+                <ul class='queue-list'>
+                    ${q.map(x => `
+                        <li class='queue-item ${x.priority === 'urgent' ? 'urgent' : ''}' data-id='${x.id}'>
+                            <div>
+                                <strong>#${x.number}</strong> 
+                                <div class='small'>${x.name} — ${x.status}</div>
+                                ${x.priority === 'urgent' ? '<span class="priority-badge priority-high">Urgent</span>' : ''}
+                                ${x.handledBy ? `<div class='small'>Doctor: ${x.handledBy}</div>` : ''}
+                                <div class='small'>Created: ${formatTime(x.created)}</div>
+                            </div>
+                            <div>
+                                <button class='ghost small removeBtn' data-id='${x.id}'>Remove</button>
+                            </div>
+                        </li>
+                    `).join('')}
+                </ul>
+            `;
+            
+            $all('.removeBtn').forEach(b => b.addEventListener('click', ev => { 
+                if(confirm('Remove ticket?')){ 
+                    removeTicket(ev.target.dataset.id); 
+                    renderAdminQueue(); 
+                    updateAdminStats();
+                    showToast('Removed'); 
+                } 
+            }));
+        }
+
+        // --- Event wiring ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Start buttons
+            $('#startPatient').addEventListener('click', () => openModal('#modalLogin'));
+            $('#startDoctor').addEventListener('click', () => openModal('#modalLogin'));
+            $('#startAdmin').addEventListener('click', () => openModal('#modalLogin'));
+            
+            // Modal buttons
+            $('#btnSignup').addEventListener('click', () => openModal('#modalSignup'));
+            $('#btnLogin').addEventListener('click', () => openModal('#modalLogin'));
+            
+            // Switch between login and signup
+            $('#switchToSignup').addEventListener('click', (e) => {
+                e.preventDefault();
+                closeModal('#modalLogin');
+                openModal('#modalSignup');
+            });
+
+            // Close modals when clicking cancel or outside
+            $all('[data-close]').forEach(btn => {
+                btn.addEventListener('click', closeAllModals);
+            });
+            
+            $all('.modal').forEach(modal => {
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        closeModal('#' + modal.id);
+                    }
+                });
+            });
+
+            $('#formSignup').addEventListener('submit', handleSignup);
+            $('#formLogin').addEventListener('submit', handleLogin);
+
+            // Initial render
+            renderApp();
+        });
+    </script>
+</body>
+</html>
